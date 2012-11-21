@@ -2,7 +2,6 @@
 ```
 bin/autotest
 
-
 Console Tool
 
 Usage:
