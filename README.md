@@ -1,3 +1,4 @@
+[![Build Status](https://secure.travis-ci.org/gonzalo123/phpAutoTest.png?branch=master)](https://travis-ci.org/gonzalo123/phpAutoTest)
 
 ```
 bin/autotest
