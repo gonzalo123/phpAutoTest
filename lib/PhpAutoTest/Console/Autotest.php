@@ -26,15 +26,15 @@ class Autotest extends Command
     protected function configure()
     {
         $this->setName('start')
-            ->setDescription('executes automatically phpunit every time you save a php file')
-            ->addArgument('directory', InputArgument::OPTIONAL, 'Where are your tests?')
-            ->addOption('disable-popups', 'dp', InputOption::VALUE_NONE, 'Disable popup messages');
+                ->setDescription('executes automatically phpunit every time you save a php file')
+                ->addArgument('directory', InputArgument::OPTIONAL, 'Where are your tests?')
+                ->addOption('disable-popups', 'dp', InputOption::VALUE_NONE, 'Disable popup messages');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->sh    = new Sh();
-        $this->popup = new Popup(self::POPUP_HEADER);
+        $this->popup = Popup::factory(self::POPUP_HEADER);
 
         $this->consoleOutput = $output;
 
@@ -59,30 +59,27 @@ class Autotest extends Command
 
     protected function startWatcher()
     {
+
         $watcher = Watcher::factory($this->directoryToWatch);
         $watcher->registerExtensionToWatch('php');
 
-        $watcher->onSave(
-            function ($file) {
+        $watcher->onSave(function ($file) {
                 $this->consoleOutput->writeln("File saved: <info>{$file}</info>");
                 $this->onSaveCallback($file);
             }
         );
 
-        $watcher->onDelete(
-            function ($file) {
+        $watcher->onDelete(function ($file) {
                 $this->consoleOutput->writeln("File deleted: <info>{$file}</info>");
                 $this->onDeleteCallback($file);
             }
         );
 
-        $watcher->onCreate(
-            function ($file) {
+        $watcher->onCreate(function ($file) {
                 $this->consoleOutput->writeln("File created: <info>{$file}</info>");
                 $this->onCreateCallback($file);
             }
         );
-
         $watcher->start();
     }
 
@@ -93,9 +90,8 @@ class Autotest extends Command
             $this->consoleOutput->writeln('<error>Syntax errors detected</error>');
             list($status, $message) = array(Popup::STATUS_NOK, "Errors detected in {$file}");
         } else {
-            $phpunitOutput = $this->sh->phpunit(array('--colors', $file));
+            $phpunitOutput = (string) $this->sh->phpunit(array('--colors', $file));
             $this->consoleOutput->writeln($phpunitOutput);
-
             if ($this->phpunitOutputHasFailures($phpunitOutput)) {
                 list($status, $message) = array(Popup::STATUS_OK, "File: {$file}\n\n phpunit without errors");
             } else {

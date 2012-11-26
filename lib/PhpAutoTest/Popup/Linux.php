@@ -30,7 +30,6 @@ class Linux implements Iface
         }
         $params[] = $this->header;
         $params[] = $message;
-
-        $this->sh->runCommnad('notify-send', $params);
+        echo $this->sh->runCommand('notify-send', $params);
     }
 }

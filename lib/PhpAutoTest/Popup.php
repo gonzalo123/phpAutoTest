@@ -2,7 +2,7 @@
 
 namespace PhpAutoTest;
 
-class Popup implements Popup\Iface
+class Popup
 {
     const POPUP_DELAY = 5000;
     const STATUS_OK   = 'ok';
@@ -17,20 +17,22 @@ class Popup implements Popup\Iface
 
     private $popup;
 
-    public function __construct($header)
+    /**
+     * @param $header
+     * @return Popup\Iface
+     * @throws \Exception
+     */
+    public static function factory($header)
     {
         switch (PHP_OS) {
             case self::LINUX:
-                $this->popup = new Popup\Linux($header);
+                return new Popup\Linux($header);
                 break;
             case self::MAC_OS_X:
-                $this->popup = new Popup\Mac($header);
+                return new Popup\Mac($header);
                 break;
+            default:
+                throw new \Exception('Not implemented.');
         }
-    }
-
-    public function show($message, $status = Popup::STATUS_NONE)
-    {
-        $this->popup->show($message, $status);
     }
 }

@@ -25,7 +25,7 @@ class ListCommandTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('directory non/existent/dir does not exists', $e->getMessage());
         }
     }
-
+    
     public function testExecuteWithPopUpsDisabled()
     {
         $application = new Application();
@@ -36,9 +36,9 @@ class ListCommandTest extends \PHPUnit_Framework_TestCase
         try {
             $commandTester->execute(
                 array(
-                    'command'   => $command->getName(),
-                    '--disable-popups'   => true,
-                    'directory' => 'non/existent/dir',
+                    'command'          => $command->getName(),
+                    '--disable-popups' => true,
+                    'directory'        => 'non/existent/dir',
                 )
             );
         } catch (\Exception $e) {
